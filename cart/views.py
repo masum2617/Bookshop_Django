@@ -81,3 +81,23 @@ def add_to_cart(request, book_id):
     #     'single_book':single_book,
     # }
     # return render(request, 'books/cart.html', context)
+
+def remove_cart(request, book_id):
+    single_book = Book.objects.get(id=book_id)
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart_item = Cart_Item.objects.get(book=single_book, cart_item=cart)
+    if cart_item.quantity >1:
+        cart_item.quantity -=1
+        cart_item.save()
+    else:
+        cart_item.delete()
+    return redirect('cart')
+
+def remove_item(request, book_id):
+    single_book = Book.objects.get(id=book_id)
+
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart_item = Cart_Item.objects.get(book=single_book, cart_item=cart)
+    cart_item.delete()
+    return redirect('cart')
+
