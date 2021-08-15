@@ -32,14 +32,27 @@
     <hr>
         <div class="row">
             <div class="item-option-select">
-                <h6>Choose Variation</h6>
+                <h6>Choose Type</h6>
                 <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color"> Hardcover
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color" > Paperback
-                  </label>
+                    {% for type in single_book.variation_set.all %}
+                    {% if type.variation_value1 and type.variation_value2 %}
+                        <label class="btn btn-light">
+                            <input type="radio" name="cover" value="{{ type.variation_value1 }}"> {{ type.variation_value1 | capfirst }}
+                        </label>
+                        <label class="btn btn-light">
+                            <input type="radio" name="cover" value="{{ type.variation_value2 }}" > {{ type.variation_value2 | capfirst }}
+                        </label>
+                    {% elif type.variation_value1 %}
+                        <label class="btn btn-light">
+                            <input type="radio" name="cover" value="{{ type.variation_value1 }}"> {{ type.variation_value1 | capfirst}}
+                        </label>
+                    {% else %}
+                        <label class="btn btn-light">
+                            <input type="radio" name="cover" value="{{ type.variation_value2 }}" > {{ type.variation_value2 | capfirst }}
+                        </label>
+                    {% endif %} 
+                    {% endfor %} 
+                    
                 </div> 
             </div>
         </div> <!-- row.// -->

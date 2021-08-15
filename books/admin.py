@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Book
+from . models import Book, Variation
 # Register your models here.
 
 class BooksAdmin(admin.ModelAdmin):
@@ -9,4 +9,9 @@ class BooksAdmin(admin.ModelAdmin):
     prepopulated_fields = { 
         'slug': ("book_title",) 
     }
+
+class VariationAdmin(admin.ModelAdmin):
+    list_display = ('book', 'variation_value1','variation_value2', 'book_type')
+
 admin.site.register(Book, BooksAdmin)
+admin.site.register(Variation, VariationAdmin)

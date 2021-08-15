@@ -5,6 +5,7 @@ from django.urls import reverse
 # Create your models here.
 
 class Book(models.Model):
+
     book_title  = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     slug        = models.SlugField(max_length=100, unique=True)
@@ -25,6 +26,25 @@ class Book(models.Model):
     
     def get_absolute_url(self):
         return reverse('book_detail', kwargs={'category_slug' : self.category.slug, 'book_slug':self.slug })
+
+
+BOOK_TYPE = (
+    ('cover', 'cover'),
+)
+
+class Variation(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book_type = models.CharField(max_length=30, choices=BOOK_TYPE, null=True)
+    variation_value1 = models.CharField(max_length=100)
+    variation_value2 = models.CharField(max_length=100, blank=True)
+    created_date = models.DateTimeField(default=datetime.now, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.variation_value1+self.variation_value2
+
+    
+
 
 
 
