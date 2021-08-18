@@ -4,6 +4,8 @@ from .models import Account
 from django.shortcuts import redirect, render
 from .forms import RegistrationForm
 from django.contrib.auth import authenticate
+from cart.models import Cart, Cart_Item
+from cart.views import _cart_id
 # Create your views here.
 def register(request):
 
@@ -56,9 +58,22 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
 
         if user is not None:
+            try:
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+                is_cart_item_exists = Cart_Item.objects.filter(cart_item=cart).exists()
+                if is_cart_item_exists:
+                    cart_items = Cart_Item.objects.filter(cart_item=cart)
+                    for item in cart_items:
+                        item.user = user
+                        item.save()
+            except:
+                pass
             auth.login(request, user)
             messages.success(request,'Login Successful')
-            return redirect('home')
+            if 'next' in request.POST:
+                return redirect(request.POST.get('next'))
+            else:
+                return redirect('home')
         else:
             messages.error(request, "Email or Passwrod is incorrect"
             )

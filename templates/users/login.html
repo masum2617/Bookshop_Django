@@ -11,6 +11,9 @@
           {% include "includes/alerts.html" %}
           <form action="{% url 'login' %}" method="POST">
               {% csrf_token %}
+              {% if request.GET.next %}
+                <input type="hidden" value="{{ request.GET.next }}" name="next">  
+              {% endif %}
               <div class="form-group">
                  <input type="email" class="form-control" placeholder="Email Address" name="email" >
               </div> <!-- form-group// -->
