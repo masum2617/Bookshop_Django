@@ -1,5 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages, auth
 from django.contrib.auth import authenticate, login
+from django.http import request
 from .models import Account
 from django.shortcuts import redirect, render
 from .forms import RegistrationForm
@@ -84,4 +86,8 @@ def logout(request):
     auth.logout(request)
     messages.success(request, "You are now Logged Out!")
     return redirect('login')
+
+@login_required(login_url='login')
+def dashboard(request):
+    return render(request, 'users/dashboard.html')
     

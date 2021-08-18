@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from cart.models import Cart_Item
 from cart.models import Cart
 from django.shortcuts import redirect, render
@@ -13,18 +14,20 @@ def _cart_id(request):
     return cart
 
 def cart(request):
-    total_price =0
-    cart_items = None
-    current_user = request.user
-    if current_user.is_authenticated:
-        cart_items = Cart_Item.objects.filter(user=current_user, is_active=True)
-    else:
-        cart = Cart.objects.get(cart_id = _cart_id(request))
-        cart_items = Cart_Item.objects.filter(cart_item=cart)
+    try:
+        total_price =0
+        cart_items = None
+        current_user = request.user
+        if current_user.is_authenticated:
+            cart_items = Cart_Item.objects.filter(user=current_user, is_active=True)
+        else:
+            cart = Cart.objects.get(cart_id = _cart_id(request))
+            cart_items = Cart_Item.objects.filter(cart_item=cart)
 
-    for item in cart_items:
-        total_price += item.book.price * item.quantity 
-
+        for item in cart_items:
+            total_price += item.book.price * item.quantity 
+    except ObjectDoesNotExist:
+        pass
 
     context = {
         'cart_items': cart_items,
@@ -69,6 +72,7 @@ def add_to_cart(request, book_id):
             cart = Cart.objects.get(cart_id=_cart_id(request))
         except Cart.DoesNotExist:
             cart = Cart.objects.create(cart_id = _cart_id(request))
+            return redirect('cart')
         cart.save()
         try: 
             cart_item = Cart_Item.objects.get(book=single_book, cart_item=cart)
