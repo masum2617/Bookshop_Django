@@ -1,4 +1,4 @@
-
+from books.models import Book  
 from cart.models import Cart_Item
 from .models import Order, OrderProduct
 from .forms import OrderForm
@@ -74,14 +74,32 @@ def place_order(request):
                ordered_product.ordered = True
                ordered_product.quantity = item.quantity
                ordered_product.save()
+
+                # reduce stock 
+               book = Book.objects.get(id=item.book_id)
+               book.stock -= item.quantity
+               book.save()
+
+       
         
         #    order.is_ordered = True            
 
-           return redirect('checkout')
+           return redirect('order_complete')
    else:
         return redirect('checkout')
  
 
+def order_complete(request):
+    current_user = request.user
+    order = Order.objects.all().filter(user=current_user)
+    orderedProduct = OrderProduct.objects.all().filter(user=current_user)
+
+    context = {
+        'order':order,
+        'orderedProduct': orderedProduct,
+    }
+
+    return render(request, 'orders/order_complete.html',context)
 
 
 
