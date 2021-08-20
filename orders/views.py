@@ -79,6 +79,8 @@ def place_order(request):
                book = Book.objects.get(id=item.book_id)
                book.stock -= item.quantity
                book.save()
+               
+           Cart_Item.objects.filter(user=current_user).delete()
 
        
         
