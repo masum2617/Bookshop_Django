@@ -31,3 +31,4 @@ virtualenv-clone==0.5.4
 virtualenvwrapper-win==1.2.6
 Werkzeug==1.0.1
 WTForms==2.3.3
+django-heroku
