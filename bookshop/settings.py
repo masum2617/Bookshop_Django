@@ -89,9 +89,10 @@ DATABASES = {
     }
 }
 
-import dj_database_url
+# import dj_database_url
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+
 
 
 # Password validation
@@ -159,3 +160,8 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER= 'brownbookshelfbd@gmail.com'
+EMAIL_HOST_PASSWORD = 'wwxhcrouyeveupvu'
+EMAIL_USE_TLS = True

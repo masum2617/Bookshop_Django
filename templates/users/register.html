@@ -11,8 +11,8 @@
           <article class="card-body">
             <header class="mb-4"><h4 class="card-title">Sign up</h4></header>
             {% include "includes/alerts.html" %}
-            {{form.email.errors}}
-            {{form.non_field_errors}}
+            <!-- {{form.email.errors}} -->
+            <!-- {{form.non_field_errors}} -->
             <form action="{% url 'register' %}" method="POST">
                 {% csrf_token %}
                     <div class="form-row">
