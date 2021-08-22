@@ -58,3 +58,7 @@ $(document).ready(function() {
 }); 
 // jquery end
 
+// to close message after some time
+setTimeout(()=>{
+    $('#message').fadeOut('slow');
+}, 4000);
