@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q)v)2l9!3(4jqh-b_$r6i=bxc-bdmy^umf42p)@q*o4qkm4sa-'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = ['brownbookshelfbd.herokuapp.com', '127.0.0.1']
 
@@ -89,9 +89,9 @@ DATABASES = {
     }
 }
 
-# import dj_database_url
+import dj_database_url
 
-# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 
@@ -162,6 +162,6 @@ MESSAGE_TAGS = {
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER= 'brownbookshelfbd@gmail.com'
-EMAIL_HOST_PASSWORD = 'wwxhcrouyeveupvu'
+EMAIL_HOST_USER= os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
