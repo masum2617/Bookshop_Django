@@ -15,7 +15,7 @@ class Book(models.Model):
     stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    photo_main  = models.ImageField(default='default.jpg', upload_to='photos/books/%Y/%m/%d/')
+    photo_main  = models.ImageField(default='default.jpg' ,upload_to='photos/books/%Y/%m/%d/')
     photo_1     = models.ImageField(upload_to='photos/books/%Y/%m/%d/', blank=True)
     photo_2     = models.ImageField(upload_to='photos/books/%Y/%m/%d/', blank=True)
     photo_3     = models.ImageField(upload_to='photos/books/%Y/%m/%d/', blank=True)

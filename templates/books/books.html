@@ -67,11 +67,12 @@
                         <figcaption class="info-wrap">
                             <div class="fix-height">
                                 <a href="{{  book.get_absolute_url }}" class="title">{{ book.book_title }}</a>
+                                <div class="mt-1">{{ book.author }}</div>
                                 <div class="price-wrap mt-2">
                                     <span class="price">{{ book.price }} tk.</span>
                                 </div> <!-- price-wrap.// -->
                             </div>
-                            <a href="{{  book.get_absolute_url }}" class="btn btn-block btn-primary">View Details </a>
+                            <a href="{{  book.get_absolute_url }}" class="btn btn-block btn-outline-primary mt-4">View Details </a>
                         </figcaption>
                     </figure>
                 </div> <!-- col.// -->
