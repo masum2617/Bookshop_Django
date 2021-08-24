@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Book, Variation
+from . models import Book, Variation, Review
 # Register your models here.
 
 class BooksAdmin(admin.ModelAdmin):
@@ -15,3 +15,4 @@ class VariationAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, BooksAdmin)
 admin.site.register(Variation, VariationAdmin)
+admin.site.register(Review)

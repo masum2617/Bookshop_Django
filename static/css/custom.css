@@ -6,3 +6,7 @@ body {
     position: sticky;
     top: 100%;
 }
+
+.footer-header {
+    color: white;
+}

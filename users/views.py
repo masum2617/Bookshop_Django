@@ -11,6 +11,7 @@ from django.contrib import messages, auth
 from django.contrib.auth import authenticate, login
 from django.http import request
 from .models import Account
+from orders.models import Order
 from django.shortcuts import redirect, render
 from .forms import RegistrationForm
 from django.contrib.auth import authenticate
@@ -85,10 +86,12 @@ def login(request):
                 pass
             auth.login(request, user)
             messages.success(request,'Login Successful')
+            
+            # redirect user to next direction from checkout
             if 'next' in request.POST:
                 return redirect(request.POST.get('next'))
             else:
-                return redirect('dashboard')
+                return redirect('home')
         else:
             messages.error(request, "Email or Passwrod is incorrect"
             )
@@ -99,10 +102,6 @@ def logout(request):
     auth.logout(request)
     # messages.success(request, "You are now Logged Out!")
     return redirect('home')
-
-@login_required(login_url='login')
-def dashboard(request):
-    return render(request, 'users/dashboard.html')
 
 
 def activate(request, uidb64, token):
@@ -182,4 +181,20 @@ def resetPassword(request):
         return render(request, 'users/resetPassword.html')
 
 def dashboard(request):
-    return render(request, 'users/dashboard.html')
+    current_user = request.user
+
+    orders = Order.objects.order_by('-created_at').filter(user_id=current_user.id, is_ordered=True)
+    total_order = orders.count()
+
+    context ={
+        'total_order':total_order,
+    }
+
+    return render(request, 'users/dashboard.html', context)
+
+def myorders(request):
+    orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
+    context = {
+        'orders':orders,
+    }
+    return render(request, 'users/myorders.html', context)

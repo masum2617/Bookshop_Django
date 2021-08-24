@@ -67,15 +67,34 @@
     
     <br>
     
-    <div class="row">
-                <div class="col-md-9">
+<div class="row">
+    <div class="col-md-9">
     
-        <header class="section-heading">
+        <header class="section-heading" style="display: inline;">
             <h3>Customer Reviews </h3>  
             
         </header>
-    
-        <article class="box mb-3">
+        {% if user.is_authenticated %}
+          
+        <form action="" method="POST">
+            {% csrf_token %}
+            <h5>Submit Your Review</h5>
+
+            <div>
+                <!-- rating stars -->
+                Review Title: 
+                <input type="text" class="form-control" name="subject">
+                <br>
+                Review :
+                <textarea name="review" rows="4" class="form-control"></textarea>
+                <br>
+                <input class="btn btn-primary mb-4" type="submit" value="Submit Review">
+            </div>
+        </form>
+        {% else %}
+            <h5 class="mr-sm-3" style="display: inline;">Please Sign in to write a review</h5><a class="btn btn-primary" href="{% url 'login' %}">Sign in</a>
+        {% endif %}
+        <article class="box mb-3 mt-3">
             <div class="icontext w-100">
                 <img src="./images/avatars/avatar1.jpg" class="img-xs icon rounded-circle">
                 <div class="text">
@@ -95,8 +114,8 @@
     
         
     
-        </div> <!-- col.// -->
-    </div> <!-- row.// -->
+    </div> <!-- col.// -->
+</div> <!-- row.// -->
     
     
     </div> <!-- container .//  -->

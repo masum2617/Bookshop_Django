@@ -8,12 +8,10 @@
     <div class="collapse navbar-collapse" id="navbarTop4">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown">
-         <a href="#" class="nav-link">   English </a>
+         <a href="{% url 'home' %}" class="nav-link">Home</a>
           
       </li>
-      <li class="nav-item dropdown">
-        <a href="#" class="nav-link"> USD </a>
-      </li>
+
       </ul>
       <ul class="navbar-nav">
       <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
@@ -37,12 +35,11 @@
           <i class="fa fa-bars"></i> All category 
         </button>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">Machinery / Mechanical Parts / Tools </a>
-          <a class="dropdown-item" href="#">Consumer Electronics / Home Appliances </a>
-          <a class="dropdown-item" href="#">Auto / Transportation</a>
-          <a class="dropdown-item" href="#">Apparel / Textiles / Timepieces </a>
-          <a class="dropdown-item" href="#">Home & Garden / Construction / Lights </a>
-          <a class="dropdown-item" href="#">Beauty & Personal Care / Health </a> 
+          {% for category in links %}
+          <a class="dropdown-item" href="{{ category.get_absolute_url }}">{{ category.category_name }}</a>
+          {% endfor %}
+         
+
         </div>
       </div>  <!-- category-wrap.// -->
     </div> <!-- col.// -->
@@ -70,7 +67,7 @@
               {% if user.is_authenticated %}
                 <small class="title text-muted">Welcome {{ user.first_name }}!</small>
                 <div> 
-                  <a href="{% url 'login' %}">Dashboard</a> <span class="dark-transp"> | </span>
+                  <a href="{% url 'dashboard' %}">Dashboard</a> <span class="dark-transp"> | </span>
                   <a href="{% url 'logout' %}"> Logout</a>
                 </div>
               {% else %}
