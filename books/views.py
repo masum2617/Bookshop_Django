@@ -1,6 +1,9 @@
+from django.contrib import messages
 from category.models import Category
-from books.models import Book
-from django.shortcuts import get_object_or_404, render
+from books.models import Book, Review
+from .forms import ReviewForm
+from orders.views import get_client_ip
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 # Create your views here.
 def books(request,category_slug=None):
@@ -29,8 +32,12 @@ def books(request,category_slug=None):
 def book_detail(request, category_slug, book_slug):
     single_book = Book.objects.get(category__slug = category_slug, slug= book_slug)
 
+
+    # getting all user reviews
+    reviews = Review.objects.filter(book_id=single_book.id, status=True)
     context = {
         'single_book' : single_book,
+        'reviews':reviews,
     }
 
     return render(request, 'books/book_detail.html', context)
@@ -46,3 +53,25 @@ def search(request):
         'books_count': books_count,
     }
     return render(request, 'books/books.html', context)
+
+def submit_review(request, book_id):
+    url = request.META.get('HTTP_REFERER') #store previous url
+    if request.method == "POST":
+        try:
+            review = Review.objects.get(user__id=request.user.id, book__id=book_id)
+            form = ReviewForm(request.POST,instance=review)
+            form.save()
+            messages.success(request, "Review updated")
+            return redirect(url)
+        except Review.DoesNotExist:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                data = Review()
+                data.subject = form.cleaned_data['subject']
+                data.review = form.cleaned_data['review']
+                data.ip = get_client_ip(request)
+                data.book_id = book_id
+                data.user_id = request.user.id
+                data.save()
+                messages.success(request, "Review successfully submited")
+                return redirect(url)
