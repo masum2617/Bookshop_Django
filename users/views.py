@@ -42,19 +42,19 @@ def register(request):
 
                         
             # registration verify with activation link
-            current_site = get_current_site(request)
-            mail_subject = "Please confirm your registration process"
-            message = render_to_string('users/user_verification.html', {
-                'user':user,
-                'domain':  current_site,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': default_token_generator.make_token(user), 
-            })
-            to_mail = email
-            send_mail = EmailMessage(mail_subject, message,to=[to_mail])
-            send_mail.send()
+            # current_site = get_current_site(request)
+            # mail_subject = "Please confirm your registration process"
+            # message = render_to_string('users/user_verification.html', {
+            #     'user':user,
+            #     'domain':  current_site,
+            #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            #     'token': default_token_generator.make_token(user), 
+            # })
+            # to_mail = email
+            # send_mail = EmailMessage(mail_subject, message,to=[to_mail])
+            # send_mail.send()
             
-            messages.success(request, "Check Email to Verify Your Account!")
+            # messages.success(request, "Check Email to Verify Your Account!")
             return redirect('register')
 
     else:
