@@ -10,7 +10,7 @@
     <h2 class="text-center">Order Confirmed!</h2>
 	<br>
 	<div class="text-center">
-		<a href="#" class="btn btn-success">Shop more</a>
+		<a href="{% url 'books' %}" class="btn btn-success">Shop more</a>
 	</div>
 </div>
 
@@ -36,7 +36,7 @@
                                 <ul class="list-unstyled text-right">
                                     <li><strong>Invoiced To</strong></li>
                                     <li>{{ order.first_name }}</li>
-                                    <li>Roupark 37</li>
+                                    <li></li>
                                     <li>{{ order.address_line_1 }}</li>
                                     <li>{{ order.city }}</li>
                                 </ul>
@@ -50,7 +50,7 @@
                                     <ul class="list-unstyled mb0">
                                         <li><strong>Order</strong> #{{ order.order_number }}</li>
                                         
-                                        <li><strong>Order Date:</strong> {{ order.created_at }}</li>
+                                        <li><strong>Order Date:</strong> {{ order.created_at |date:"M d, Y" }}</li>
                                         <li><strong>Status:</strong><span style="color:#28A745; font-weight: Bold;" > Accepted</span></li>
                                     </ul>
                          {% endfor %}
@@ -111,8 +111,6 @@
         </div>
         <!-- col-lg-12 end here -->
     </div>
-    </div>
-
-
+</div>
 
 {% endblock %}

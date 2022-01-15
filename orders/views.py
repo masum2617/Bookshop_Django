@@ -1,8 +1,11 @@
-from books.models import Book  
+from django.urls import reverse
+from books.models import Book
+from cart.views import cart  
 from cart.models import Cart_Item
 from .models import Order, OrderProduct
 from .forms import OrderForm
 from django.shortcuts import redirect, render
+from django.http import HttpResponse, HttpResponseRedirect
 import datetime
 # Create your views here.
 
@@ -14,15 +17,77 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+def place_order(request):
+    current_user= request.user
+    total =0
+    cart_items = Cart_Item.objects.filter(user=current_user)
+    print(cart_items)
+    for item in cart_items:
+        total += (item.book.price * item.quantity)
+    print("TOTAL: ", total)
 
-def place_order(request): 
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+
+        if form.is_valid():
+            data = Order()
+            data.user = current_user
+            data.first_name = form.cleaned_data['first_name']
+            data.last_name = form.cleaned_data['last_name']
+            data.phone = form.cleaned_data['phone']
+            data.email = form.cleaned_data['email']
+            data.address_line_1 = form.cleaned_data['address_line_1']
+            data.address_line_2 = form.cleaned_data['address_line_2']
+            data.country = form.cleaned_data['country']
+            data.city = form.cleaned_data['city']
+            data.order_total = total
+            data.delivery_charge = 50
+            data.save()
+            yr = int(datetime.date.today().strftime('%Y'))
+            dt = int(datetime.date.today().strftime('%d'))
+            mt = int(datetime.date.today().strftime('%m'))
+            d = datetime.date(yr,mt,dt)
+            current_date = d.strftime("%Y%m%d") 
+            order_number = current_date + str(data.id) 
+            data.order_number = order_number
+            data.is_ordered = True
+            data.save()
+            Cart_Item.objects.filter(user=current_user).delete()
+            # order = Order.objects.get(user=current_user, is_ordered=True)
+           
+            # for item in cart_items:
+            #     ordered_product = OrderProduct()
+
+            #     ordered_product.order_id = order.id
+            #     ordered_product.user_id = current_user.id
+            #     ordered_product.product_id = item.book_id
+            #     ordered_product.product_price = item.book.price
+            #     ordered_product.ordered = True
+            #     ordered_product.quantity = item.quantity
+            #     ordered_product.save()
+            #     order.is_ordered = False
+
+                # reduce stock 
+                # book = Book.objects.get(id=item.book_id)
+                # book.stock -= item.quantity
+                # book.save()
+        # order.delete()
+            return redirect('order_complete')
+
+        return render(request, 'books/checkout.html')
+
+
+
+
+
+""" def place_order(request): 
    current_user = request.user
    total = 0
    cart_items = Cart_Item.objects.filter(user=current_user)
-
+   print("CART ITEMS ", cart_items)
    for item in cart_items:
        total += (item.book.price * item.quantity)
-
+   print(total)
 
    if request.method == "POST":
        form = OrderForm(request.POST)
@@ -37,16 +102,8 @@ def place_order(request):
            data.address_line_2 = form.cleaned_data['address_line_2']
            data.country = form.cleaned_data['country']
            data.city = form.cleaned_data['city']
-           data.order_note = form.cleaned_data['order_note']
-           data.last_name = form.cleaned_data['last_name']
-           data.phone = form.cleaned_data['phone']
-           data.email = form.cleaned_data['email']
-           data.address_line_1 = form.cleaned_data['address_line_1']
-           data.address_line_2 = form.cleaned_data['address_line_2']
-           data.country = form.cleaned_data['country']
-           data.city = form.cleaned_data['city']
-           data.order_note = form.cleaned_data['order_note']
-           data.ip = get_client_ip(request)
+
+        #    data.ip = get_client_ip(request)
            data.order_total = total
            data.delivery_charge = 50
 
@@ -65,42 +122,45 @@ def place_order(request):
            order = Order.objects.get(user=current_user, is_ordered=True)
            
            for item in cart_items:
-               ordered_product = OrderProduct()
+                ordered_product = OrderProduct()
 
-               ordered_product.order_id = order.id
-               ordered_product.user_id = current_user.id
-               ordered_product.product_id = item.book_id
-               ordered_product.product_price = item.book.price
-               ordered_product.ordered = True
-               ordered_product.quantity = item.quantity
-               ordered_product.save()
+                ordered_product.order_id = order.id
+                ordered_product.user_id = current_user.id
+                ordered_product.product_id = item.book_id
+                ordered_product.product_price = item.book.price
+                ordered_product.ordered = True
+                ordered_product.quantity = item.quantity
+                ordered_product.save()
 
                 # reduce stock 
-               book = Book.objects.get(id=item.book_id)
-               book.stock -= item.quantity
-               book.save()
+                book = Book.objects.get(id=item.book_id)
+                book.stock -= item.quantity
+                book.save()
+                return redirect('order_complete')
+                # return HttpResponseRedirect(redirect('order_complete'))
+           
+                
                
-           Cart_Item.objects.filter(user=current_user).delete()
+           
 
        
         
         #    order.is_ordered = True            
 
-           return redirect('order_complete')
+        
    else:
-        return redirect('checkout')
+        return redirect('checkout') """
  
 
 def order_complete(request):
     current_user = request.user
-    order = Order.objects.all().filter(user=current_user)
-    orderedProduct = OrderProduct.objects.all().filter(user=current_user)
+    order = Order.objects.filter(user=current_user)
+    orderedProduct = OrderProduct.objects.filter(user=current_user)
 
     context = {
         'order':order,
         'orderedProduct': orderedProduct,
     }
-
     return render(request, 'orders/order_complete.html',context)
 
 

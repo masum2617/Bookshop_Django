@@ -56,7 +56,8 @@ def register(request):
             # send_mail.send()
             
             # messages.success(request, "Check Email to Verify Your Account!")
-            return redirect('register')
+            messages.success(request, "You are successfully registered! You can now login")
+            return redirect('login')
 
     else:
         form = RegistrationForm(request.POST)    
